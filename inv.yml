@@ -1,0 +1,38 @@
+- hosts: all
+  vars:
+    - servername: "{{ servernames.split('\n') }}"
+  become: yes
+  become_user: root
+  tasks:
+ 
+  - name: Delete Inventory file
+    file:
+      path: "/tmp/{{ inv_name }}.inv"
+      state: absent
+
+  - name: Update Inventory file
+    lineinfile:
+      path: "/tmp/{{ inv_name }}.inv"
+      line: "{{ item }}"
+      create: yes
+    loop: "{{ servername }}"
+
+  - name: Create patching inventory
+    tower_inventory:
+      name: "{{ inv_name }}"
+      organization: "Default"
+      tower_username: admin
+      tower_password: "Temp432!"
+      tower_host: "{{ tower_host }}"
+      tower_verify_ssl: false
+    register: patch_inventory
+    until: patch_inventory is success
+    delay: 3
+    retries: 5
+ 
+  - name: Import Inventory
+    shell: "/bin/tower-manage inventory_import --source=/tmp/{{ inv_name }}.inv --inventory-name={{ inv_name }}"
+
+
+  - name: Grant access to inventory
+    shell: "tower-cli role grant --type 'admin' --user {{ tower_user_name }} --inventory {{ inv_name }}"
