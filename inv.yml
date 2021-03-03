@@ -1,6 +1,7 @@
 - hosts: all
   vars:
     - servername: "{{ servernames.split('\n') }}"
+    - tower_host: serverb
   become: yes
   become_user: root
   tasks:
