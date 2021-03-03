@@ -22,7 +22,7 @@
       name: "{{ inv_name }}"
       organization: "Default"
       tower_username: admin
-      tower_password: "Temp432!"
+      tower_password: "Dx5oGr11"
       tower_host: "{{ tower_host }}"
       tower_verify_ssl: false
     register: patch_inventory
