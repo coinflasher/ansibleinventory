@@ -35,5 +35,7 @@
     shell: "/bin/tower-manage inventory_import --source=/tmp/{{ inv_name }}.inv --inventory-name={{ inv_name }}"
 
 
+  - name: Disable SSL checking
+    shell: "tower-cli config verify_ssl false"
   - name: Grant access to inventory
     shell: "tower-cli role grant --type 'admin' --user {{ tower_user_name }} --inventory {{ inv_name }}"
